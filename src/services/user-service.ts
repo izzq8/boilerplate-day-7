@@ -1,43 +1,29 @@
 import { User } from '../models/user-model';
-const storedUsers = require('../data/user-data');
+
+const userRepository = require('../repositories/user-repository');
 
 // cari user berdasarkan id nya
-const findUserById = (id: number): User | undefined => {
-  return storedUsers.find((user: User) => user.id == id);
+const findUserById = async (id: number): Promise<User | undefined> => {
+  return await userRepository.findUserById(id);
 };
 exports.findUserById = findUserById;
 
 // dapatkan semua user
-exports.getUsers = (): User => {
-  const data: User = storedUsers;
-
-  return data || [];
+exports.getUsers = async (): Promise<User[]> => {
+  return await userRepository.getAllUsers();
 };
 
 // ubah data user
-exports.updateUserById = (
+exports.updateUserById = async (
   id: number,
-  input: User,
-): User | undefined => {
-  const user = findUserById(id);
-  if (!user) return undefined;
-
-  Object.assign(user, input);
-  return user;
+  input: Partial<User>,
+): Promise<User | undefined> => {
+  return await userRepository.updateUserById(id, input);
 };
 
 // hapus data user berdasarkan id nya
-exports.deleteUserById = (
+exports.deleteUserById = async (
   id: number,
-): User | undefined => {
-  const user = findUserById(id);
-  if (!user) return undefined;
-
-  const index = storedUsers.indexOf(user);
-  if (index !== -1) {
-    storedUsers.splice(index, 1);
-    return user;
-  }
-
-  return undefined;
+): Promise<number> => {
+  return await userRepository.deleteUserById(id);
 };
