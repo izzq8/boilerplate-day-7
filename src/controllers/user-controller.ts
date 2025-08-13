@@ -29,6 +29,33 @@ exports.index = async (req: Request, res: Response) => {
   }
 };
 
+// create user baru
+exports.create = async (req: Request, res: Response) => {
+  const userData = req.body;
+
+  try {
+    // Hash password jika ada
+    if (userData.password) {
+      const bcrypt = require('bcrypt');
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
+
+    const newUser = await userService.createUser(userData);
+
+    return res.status(201).json({
+      statusCode: 201,
+      message: 'Berhasil membuat user baru!',
+      data: newUser,
+    });
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({
+      statusCode: 500,
+      message: 'Error internal server!',
+    });
+  }
+};
+
 // update user
 exports.update = async (req: AuthenticatedRequest, res: Response) => {
   // cek apakah role = student

@@ -8,6 +8,9 @@ const userController = require('../controllers/user-controller');
 // GET /api/users
 router.get('/', userController.index);
 
+// POST /api/users -> create user baru (hanya admin)
+router.post('/', authenticationMiddleware, onlyAdminMiddleware, userController.create);
+
 // GET /api/users/students
 router.get(
   '/students',

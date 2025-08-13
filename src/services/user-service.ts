@@ -2,6 +2,11 @@ import { User } from '../models/user-model';
 
 const userRepository = require('../repositories/user-repository');
 
+// create user baru
+exports.createUser = async (userData: Partial<User>): Promise<User> => {
+  return await userRepository.createUser(userData);
+};
+
 // cari user berdasarkan id nya
 const findUserById = async (id: number): Promise<User | undefined> => {
   return await userRepository.findUserById(id);
